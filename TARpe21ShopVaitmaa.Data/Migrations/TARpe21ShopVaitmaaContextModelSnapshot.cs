@@ -22,10 +22,44 @@ namespace TARpe21ShopVaitmaa.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("TARpe21ShopVaitmaa.Core.Domain.Car", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cars");
+                });
+
             modelBuilder.Entity("TARpe21ShopVaitmaa.Core.Domain.FileToApi", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CarId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ExistingFilePath")
@@ -36,6 +70,8 @@ namespace TARpe21ShopVaitmaa.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CarId");
 
                     b.HasIndex("RealEstateId");
 
@@ -223,9 +259,18 @@ namespace TARpe21ShopVaitmaa.Data.Migrations
 
             modelBuilder.Entity("TARpe21ShopVaitmaa.Core.Domain.FileToApi", b =>
                 {
+                    b.HasOne("TARpe21ShopVaitmaa.Core.Domain.Car", null)
+                        .WithMany("FilesToApi")
+                        .HasForeignKey("CarId");
+
                     b.HasOne("TARpe21ShopVaitmaa.Core.Domain.RealEstate", null)
                         .WithMany("FilesToApi")
                         .HasForeignKey("RealEstateId");
+                });
+
+            modelBuilder.Entity("TARpe21ShopVaitmaa.Core.Domain.Car", b =>
+                {
+                    b.Navigation("FilesToApi");
                 });
 
             modelBuilder.Entity("TARpe21ShopVaitmaa.Core.Domain.RealEstate", b =>
